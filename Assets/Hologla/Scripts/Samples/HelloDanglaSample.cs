@@ -1,0 +1,75 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class HelloDanglaSample : MonoBehaviour {
+
+	[SerializeField]private Hologla.HologlaCameraManager hologlaManager = null ;
+	[SerializeField]private GameObject spawnObj = null ;
+
+	// Use this for initialization
+	void Start( )
+	{
+		return;	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+
+	public void SpawnMovableObject(GameObject spawnTransObj)
+	{
+		if( null == spawnObj ){
+			return;
+		}
+		GameObject obj ;
+		Rigidbody rigidbody ;
+
+		obj = Instantiate(spawnObj, spawnTransObj.transform.position, spawnTransObj.transform.rotation);
+		Destroy(obj, 10.0f);
+		obj.SetActive(true);
+		rigidbody = obj.GetComponent<Rigidbody>( );
+		if( null != rigidbody ){
+			rigidbody.AddForce(spawnTransObj.transform.forward * 500.0f);
+		}
+
+		return;
+	}
+
+	public void BackMenuSample( )
+	{
+		SceneManager.LoadScene("MenuSample", LoadSceneMode.Single);
+
+		return;
+	}
+
+
+	//メニューオブジェクトの位置を視点正面位置にリセットする.
+	public void ResetMenuPosition(GameObject menuObj)
+	{
+		if( null != hologlaManager ){
+			menuObj.transform.position = hologlaManager.transform.position;
+		}
+		else{
+			menuObj.transform.position = Camera.main.transform.position;
+		}
+
+		return;
+	}
+	//メニューオブジェクトの向きを視点正面方向にリセットする(Roll回転は無視する).
+	public void ResetMenuRotation(GameObject menuObj)
+	{
+		if( null != hologlaManager ){
+			menuObj.transform.rotation = Quaternion.Euler(hologlaManager.transform.eulerAngles.x, hologlaManager.transform.eulerAngles.y, 0.0f);
+		}
+		else{
+			menuObj.transform.rotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x, Camera.main.transform.eulerAngles.y, 0.0f);
+		}
+
+		return;
+	}
+
+
+}
